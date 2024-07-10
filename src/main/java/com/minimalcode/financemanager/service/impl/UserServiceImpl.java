@@ -5,6 +5,7 @@ import com.minimalcode.financemanager.model.user.Role;
 import com.minimalcode.financemanager.model.user.User;
 import com.minimalcode.financemanager.repository.UserRepository;
 import com.minimalcode.financemanager.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,13 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void register(RegisterRequest request) {
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.ROLE_USER);
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        userRepository.save(user);
+    public void register(RegisterRequest user) {
+        User newUser = new User();
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(user.getPassword());
+        newUser.setRole(Role.ROLE_USER);
+        userRepository.save(newUser);
     }
 }

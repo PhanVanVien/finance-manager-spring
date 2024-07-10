@@ -1,10 +1,6 @@
 package com.minimalcode.financemanager.dto.auth.request;
 
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +25,6 @@ public class RegisterRequest {
             regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
             message = "Email should be in the format example@example.com"
     )
-    @Column(unique = true)
     private String email;
 
     @Pattern(

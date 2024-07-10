@@ -1,0 +1,22 @@
+--create database finance_manager;
+--use finance_manager;
+--
+--create table user (
+--	user_id int not null auto_increment,
+--    last_name varchar(55) not null,
+--    first_name varchar(55) not null,
+--    email varchar(55) not null,
+--    password varchar(255) not null,
+--    role varchar(55) not null,
+--    primary key(user_id)
+--);
+--
+--create table budget (
+--	budget_id int not null auto_increment,
+--    category varchar(55) not null,
+--	amount DECIMAL(10, 2) not null,
+--    spent_amount DECIMAL(10, 2),
+--    user_id int not null,
+--    primary key(budget_id)
+--);
+--ALTER TABLE user ADD UNIQUE (email);
