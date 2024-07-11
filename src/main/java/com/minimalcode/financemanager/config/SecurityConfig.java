@@ -14,7 +14,8 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST = {
             "/test/**",
             "/api/v1/user/**",
-            "/api/v1/budget/**"
+            "/api/v1/budget/**",
+            "/api/v1/expense/**"
     };
 
     @Bean

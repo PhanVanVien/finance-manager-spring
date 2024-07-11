@@ -16,4 +16,8 @@ public interface BudgetService {
     void editBudget(Long budgetId, BudgetRequest budgetRequest);
 
     Budget getBudgetDetail(Long budgetId);
+
+    List<String> getDistinctCategoriesByUserId(Long userId);
+
+    List<Budget> getBudgetsSortedByDateCreatedDesc(Long userId, Pageable pageable);
 }

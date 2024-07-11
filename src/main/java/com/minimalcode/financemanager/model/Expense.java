@@ -1,18 +1,19 @@
 package com.minimalcode.financemanager.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Expense {
@@ -21,9 +22,10 @@ public class Expense {
     private Long expenseId;
     private String description;
     private BigDecimal amount;
-    private LocalDate dateCreated;
-    // ManyToOne
-//    private Budget budget;
-    // ManyToOne
-//    private User user;
+    @CreationTimestamp
+    private LocalDateTime dateCreated;
+    @ManyToOne
+    @JoinColumn(name = "budget_id")
+    @JsonIgnore
+    private Budget budget;
 }

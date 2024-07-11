@@ -52,7 +52,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public List<Budget> getBudgetsByUserId(Long userId, Pageable pageable) {
-        User user = userRepository
+        userRepository
                 .findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userId));
 
@@ -82,6 +82,10 @@ public class BudgetServiceImpl implements BudgetService {
         budgetRepository.save(budget);
     }
 
+    public boolean isValidAmount(BigDecimal newAmount, BigDecimal spentAmount) {
+        return newAmount.compareTo(spentAmount) > 0;
+    }
+
     @Override
     public Budget getBudgetDetail(Long budgetId) {
         return budgetRepository
@@ -89,7 +93,17 @@ public class BudgetServiceImpl implements BudgetService {
                 .orElseThrow(() -> new BudgetNotFoundException("Budget not found with id: " + budgetId));
     }
 
-    public boolean isValidAmount(BigDecimal newAmount, BigDecimal spentAmount) {
-        return newAmount.compareTo(spentAmount) > 0;
+    @Override
+    public List<String> getDistinctCategoriesByUserId(Long userId) {
+        return budgetRepository.findDistinctCategoriesByUserId(userId);
     }
+
+    @Override
+    public List<Budget> getBudgetsSortedByDateCreatedDesc(Long userId, Pageable pageable) {
+        userRepository
+                .findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userId));
+        return budgetRepository.findByUserUserId(userId, pageable).getContent();
+    }
+
 }

@@ -8,8 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,8 +29,12 @@ public class Budget {
     private String category;
     private BigDecimal amount;
     private BigDecimal spentAmount;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @CreationTimestamp
+    private LocalDateTime dateCreated;
+    @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+    @OneToMany(mappedBy = "budget", cascade = CascadeType.ALL)
+    private List<Expense> expenses;
 }

@@ -1,5 +1,6 @@
 package com.minimalcode.financemanager.model.user;
 
+import com.minimalcode.financemanager.model.Budget;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,8 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Budget> budgets;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/budget")
 public class BudgetController {
+    private static final String DEFAULT_PAGE_INDEX = "0";
+    private static final String DEFAULT_PAGE_SIZE = "10";
     @Autowired
     private BudgetService budgetService;
 
@@ -46,13 +49,27 @@ public class BudgetController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Budget>> getBudgetsByUsername(
+    public ResponseEntity<List<Budget>> getBudgetsByUserId(
             @PathVariable Long userId,
-            @RequestParam(required = false, defaultValue = "0") int pageIndex,
-            @RequestParam(required = false, defaultValue = "10") int pageSize) {
+            @RequestParam(required = false, defaultValue = DEFAULT_PAGE_INDEX) int pageIndex,
+            @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         try {
             Pageable pageable = PageRequest.of(pageIndex, pageSize);
             List<Budget> budgets = budgetService.getBudgetsByUserId(userId, pageable);
+            return ResponseEntity.ok(budgets);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+    }
+
+    @GetMapping("/sorted-by-date/{userId}")
+    public ResponseEntity<List<Budget>> getBudgetsSortedByDateCreatedDesc(
+            @PathVariable Long userId,
+            @RequestParam(required = false, defaultValue = DEFAULT_PAGE_INDEX) int pageIndex,
+            @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        try {
+            Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("dateCreated").descending());
+            List<Budget> budgets = budgetService.getBudgetsSortedByDateCreatedDesc(userId, pageable);
 
             return ResponseEntity.ok(budgets);
         } catch (UsernameNotFoundException e) {
@@ -75,7 +92,7 @@ public class BudgetController {
         }
     }
 
-    @GetMapping("/get/{budgetId}")
+    @GetMapping("/detail/{budgetId}")
     public ResponseEntity<?> getBudgetDetail(
             @PathVariable Long budgetId
     ) {
@@ -84,6 +101,18 @@ public class BudgetController {
             return ResponseEntity.status(HttpStatus.OK).body(budget);
         } catch (BudgetNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/categories/{userId}")
+    public ResponseEntity<List<String>> getDistinctCategoriesByUserId(
+            @PathVariable Long userId
+    ) {
+        try {
+            List<String> categories = budgetService.getDistinctCategoriesByUserId(userId);
+            return ResponseEntity.ok(categories);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
         }
     }
 }
